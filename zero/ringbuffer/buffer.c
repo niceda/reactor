@@ -11,6 +11,7 @@ static inline int is_power_of_two(uint32_t num) {
     return (num & (num - 1)) == 0;
 }
 
+// 使 size 变为2的幂，好取余
 static inline uint32_t roundup_power_of_two(uint32_t num) {
     if (num == 0) return 2;
     int i = 0;
@@ -98,7 +99,8 @@ int buffer_search(buffer_t *r, const char* sep, const int seplen) {
         if (pos + seplen > r->size) {
             if (memcmp(r->buf+pos, sep, r->size-pos))
                 return 0;
-            if (memcmp(r->buf, sep, pos+seplen-r->size) == 0) {
+            if (memcmp(r->buf, sep + r->size - pos, pos+seplen-r->size) == 0) {
+            // if (memcmp(r->buf, sep, pos+seplen-r->size) == 0) {
                 return i+seplen;
             }
         }

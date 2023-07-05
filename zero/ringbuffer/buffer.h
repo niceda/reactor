@@ -12,6 +12,7 @@
 typedef struct ringbuffer_s {
     char * buf;
     uint32_t size;
+    // 注意： head 和 tail 都是一直递增的
     uint32_t tail;
     uint32_t head;
 } buffer_t;
@@ -30,6 +31,7 @@ int buffer_drain(buffer_t *r, uint32_t sz);
 
 int buffer_search(buffer_t *r, const char* sep, const int seplen);
 
+// 调整buffer，使得head和tail之间的空间连续
 uint8_t * buffer_write_atmost(buffer_t *r);
 
 #endif

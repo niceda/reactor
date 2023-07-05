@@ -21,7 +21,7 @@ buffer_len(buffer_t *buf) {
 
 void
 buffer_init(buffer_t *buf, uint32_t sz) {
-    (void)sz;
+    (void)sz;//防止编译器报warning
     memset(buf, 0, sizeof(*buf));
     buf->last_with_datap = &buf->first;
 }
@@ -239,6 +239,7 @@ int buffer_drain(buffer_t *buf, uint32_t len) {
             next = chain->next;
             remaining -= chain->off;
 
+            // >>> 这里可以优化掉吧
             if (chain == *buf->last_with_datap) {
                 buf->last_with_datap = &buf->first;
             }
@@ -315,7 +316,7 @@ int buffer_search(buffer_t *buf, const char* sep, const int seplen) {
             bytes = chain->off;
         }
     }
-    buf->last_read_pos = i;
+    buf->last_read_pos = i;//
     return 0;
 }
 
@@ -329,7 +330,7 @@ uint8_t * buffer_write_atmost(buffer_t *p) {
     chain = p->first;
     uint32_t size = p->total_len;
 
-    if (chain->off >= size) {
+    if (chain->off >= size) {// >>>单个off怎么会大于size呢？
         return chain->buffer + chain->misalign;
     }
 
